@@ -1,5 +1,5 @@
 {
-  "domain": "mcp23017zero",
+  "domain": "mcp23017",
   "name": "MCP23017 zero",
   "codeowners": ["@pkondela"],
   "config_flow": true,
