@@ -13,7 +13,7 @@
     },
     "abort": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
-      "cannot_create": "Unable to create MCP23017 device with specified parameters"
+      "cannot_create": "Unable to create MCP23017zero device with specified parameters"
     }
   },
   "options": {
