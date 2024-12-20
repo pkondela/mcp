@@ -1,4 +1,4 @@
-"""Config flow for MCP23017 component."""
+"""Config flow for MCP23017zero component."""
 
 import voluptuous as vol
 
@@ -26,8 +26,8 @@ from .const import (
 PLATFORMS = ["binary_sensor", "switch"]
 
 
-class Mcp23017ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """MCP23017 config flow."""
+class Mcp23017zeroConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """MCP23017zero config flow."""
 
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_PUSH
@@ -51,7 +51,7 @@ class Mcp23017ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry):
         """Add support for config flow options."""
-        return Mcp23017OptionsFlowHandler(config_entry)
+        return Mcp23017zeroOptionsFlowHandler(config_entry)
 
     async def async_step_import(self, user_input=None):
         """Create a new entity from configuration.yaml import."""
@@ -108,8 +108,8 @@ class Mcp23017ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
 
-class Mcp23017OptionsFlowHandler(config_entries.OptionsFlow):
-    """MCP23017 config flow options."""
+class Mcp23017zeroOptionsFlowHandler(config_entries.OptionsFlow):
+    """MCP23017zero config flow options."""
 
     def __init__(self, config_entry):
         """Initialize options flow."""
