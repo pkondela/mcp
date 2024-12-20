@@ -1,4 +1,4 @@
-"""Platform for mcp23017-based binary_sensor."""
+"""Platform for mcp23017zero-based binary_sensor."""
 
 import asyncio
 import functools
@@ -46,7 +46,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the MCP23017 platform for binary_sensor entities."""
+    """Set up the MCP23017zero platform for binary_sensor entities."""
 
     # Wait for configflow to terminate before processing configuration.yaml
     while setup_entry_status.busy():
@@ -70,9 +70,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Set up a MCP23017 binary_sensor entry."""
+    """Set up a MCP23017zero binary_sensor entry."""
 
-    binary_sensor_entity = MCP23017BinarySensor(hass, config_entry)
+    binary_sensor_entity = MCP23017zeroBinarySensor(hass, config_entry)
     binary_sensor_entity.device = await async_get_or_create(
         hass, config_entry, binary_sensor_entity
     )
@@ -82,15 +82,15 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 async def async_unload_entry(hass, config_entry):
-    """Unload MCP23017 binary_sensor entry corresponding to config_entry."""
+    """Unload MCP23017zero binary_sensor entry corresponding to config_entry."""
     _LOGGER.warning("[FIXME] async_unload_entry not implemented")
 
 
-class MCP23017BinarySensor(BinarySensorEntity):
-    """Represent a binary sensor that uses MCP23017."""
+class MCP23017zeroBinarySensor(BinarySensorEntity):
+    """Represent a binary sensor that uses MCP23017zero."""
 
     def __init__(self, hass, config_entry):
-        """Initialize the MCP23017 binary sensor."""
+        """Initialize the MCP23017zero binary sensor."""
         self._state = None
         self._device = None
 
@@ -177,7 +177,7 @@ class MCP23017BinarySensor(BinarySensorEntity):
         return {
             "identifiers": {(DOMAIN, self._i2c_address)},
             "manufacturer": "Microchip",
-            "model": "MCP23017",
+            "model": "MCP23017zero",
             "entry_type": DeviceEntryType.SERVICE,
         }
 
