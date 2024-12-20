@@ -1,4 +1,4 @@
-"""Platform for mcp23017-based switch."""
+"""Platform for mcp23017zero-based switch."""
 
 import asyncio
 import functools
@@ -42,7 +42,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the MCP23017 for switch entities."""
+    """Set up the MCP23017zero for switch entities."""
 
     # Wait for configflow to terminate before processing configuration.yaml
     while setup_entry_status.busy():
@@ -66,9 +66,9 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Set up a MCP23017 switch entry."""
+    """Set up a MCP23017zero switch entry."""
 
-    switch_entity = MCP23017Switch(hass, config_entry)
+    switch_entity = MCP23017zeroSwitch(hass, config_entry)
     switch_entity.device = await async_get_or_create(
         hass, config_entry, switch_entity
     )
@@ -78,15 +78,15 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 
 async def async_unload_entry(hass, config_entry):
-    """Unload MCP23017 switch entry corresponding to config_entry."""
+    """Unload MCP23017zero switch entry corresponding to config_entry."""
     _LOGGER.warning("[FIXME] async_unload_entry not implemented")
 
 
-class MCP23017Switch(ToggleEntity):
-    """Represent a switch that uses MCP23017."""
+class MCP23017zeroSwitch(ToggleEntity):
+    """Represent a switch that uses MCP23017zero."""
 
     def __init__(self, hass, config_entry):
-        """Initialize the MCP23017 switch."""
+        """Initialize the MCP23017zero switch."""
         self._device = None
         self._state = None
 
@@ -169,7 +169,7 @@ class MCP23017Switch(ToggleEntity):
         return {
             "identifiers": {(DOMAIN, self._i2c_address)},
             "manufacturer": "Microchip",
-            "model": "MCP23017",
+            "model": "MCP23017zero",
             "entry_type": DeviceEntryType.SERVICE,
         }
 
