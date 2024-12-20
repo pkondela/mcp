@@ -1,4 +1,4 @@
-"""Support for I2C MCP23017 chip."""
+"""Support for I2C MCP23017zero chip."""
 
 import asyncio
 import functools
@@ -21,7 +21,7 @@ from .const import (
     DOMAIN,
 )
 
-# MCP23017 Register Map (IOCON.BANK = 1, MCP23008-compatible)
+# MCP23017zero Register Map (IOCON.BANK = 1, MCP23008-compatible)
 IODIRA = 0x00
 IODIRB = 0x10
 IPOLA = 0x01
@@ -52,7 +52,7 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = ["binary_sensor", "switch"]
 
-MCP23017_DATA_LOCK = asyncio.Lock()
+MCP23017zero_DATA_LOCK = asyncio.Lock()
 
 class SetupEntryStatus:
     """Class registering the number of outstanding async_setup_entry calls."""
@@ -75,7 +75,7 @@ setup_entry_status = SetupEntryStatus()
 async def async_setup(hass, config):
     """Set up the component."""
 
-    # hass.data[DOMAIN] stores one entry for each MCP23017 instance using i2c address as a key
+    # hass.data[DOMAIN] stores one entry for each MCP23017zero instance using i2c address as a key
     hass.data.setdefault(DOMAIN, {})
 
     # Callback function to start polling when HA starts
@@ -97,7 +97,7 @@ async def async_setup(hass, config):
 
 
 async def async_setup_entry(hass, config_entry):
-    """Set up the MCP23017 from a config entry."""
+    """Set up the MCP23017zero from a config entry."""
 
     # Register this setup instance
     with setup_entry_status:
@@ -110,7 +110,7 @@ async def async_setup_entry(hass, config_entry):
 
 
 async def async_unload_entry(hass, config_entry):
-    """Unload entity from MCP23017 component and platform."""
+    """Unload entity from MCP23017zero component and platform."""
     # Unload related platform
     await hass.config_entries.async_forward_entry_unload(
         config_entry, config_entry.data[CONF_FLOW_PLATFORM]
@@ -119,7 +119,7 @@ async def async_unload_entry(hass, config_entry):
     i2c_address = config_entry.data[CONF_I2C_ADDRESS]
 
     # DOMAIN data async mutex
-    async with MCP23017_DATA_LOCK:
+    async with MCP23017zero_DATA_LOCK:
         if i2c_address in hass.data[DOMAIN]:
             component = hass.data[DOMAIN][i2c_address]
 
@@ -153,19 +153,19 @@ async def async_unload_entry(hass, config_entry):
 
 
 async def async_get_or_create(hass, config_entry, entity):
-    """Get or create a MCP23017 component from entity i2c address."""
+    """Get or create a MCP23017zero component from entity i2c address."""
 
     i2c_address = entity.address
 
     # DOMAIN data async mutex
     try:
-        async with MCP23017_DATA_LOCK:
+        async with MCP23017zero_DATA_LOCK:
             if i2c_address in hass.data[DOMAIN]:
                 component = hass.data[DOMAIN][i2c_address]
             else:
                 # Try to create component when it doesn't exist
                 component = await hass.async_add_executor_job(
-                    functools.partial(MCP23017, DEFAULT_I2C_BUS, i2c_address)
+                    functools.partial(MCP23017zero, DEFAULT_I2C_BUS, i2c_address)
                 )
                 hass.data[DOMAIN][i2c_address] = component
 
@@ -210,11 +210,11 @@ def i2c_device_exist(address):
     return True
 
 
-class MCP23017(threading.Thread):
-    """MCP23017 device driver."""
+class MCP23017zero(threading.Thread):
+    """MCP23017zero device driver."""
 
     def __init__(self, bus, address):
-        """Create a MCP23017 instance at {address} on I2C {bus}."""
+        """Create a MCP23017zero instance at {address} on I2C {bus}."""
         self._address = address
 
         # Check device presence
@@ -260,16 +260,16 @@ class MCP23017(threading.Thread):
         return False
 
     def __setitem__(self, register, value):
-        """Set MCP23017 {register} to {value}."""
+        """Set MCP23017zero {register} to {value}."""
         self._bus.write_byte_data(self._address, register, value)
 
     def __getitem__(self, register):
-        """Get value of MCP23017 {register}."""
+        """Get value of MCP23017zero {register}."""
         data = self._bus.read_byte_data(self._address, register)
         return data
 
     def _get_register_value(self, register, bit):
-        """Get MCP23017 {bit} of {register}."""
+        """Get MCP23017zero {bit} of {register}."""
         if bit < 8:
             value = self[globals()[register + "A"]] & 0xFF
             self._cache[register] = self._cache[register] & 0xFF00 | value
@@ -280,7 +280,7 @@ class MCP23017(threading.Thread):
         return bool(self._cache[register] & (1 << bit))
 
     def _set_register_value(self, register, bit, value):
-        """Set MCP23017 {bit} of {register} to {value}."""
+        """Set MCP23017zero {bit} of {register} to {value}."""
         # Update cache
         cache_old = self._cache[register]
         if value:
@@ -312,22 +312,22 @@ class MCP23017(threading.Thread):
     # -- Called from HA thread pool
 
     def get_pin_value(self, pin):
-        """Get MCP23017 GPIO[{pin}] value."""
+        """Get MCP23017zero GPIO[{pin}] value."""
         with self:
             return self._get_register_value("GPIO", pin)
 
     def set_pin_value(self, pin, value):
-        """Set MCP23017 GPIO[{pin}] to {value}."""
+        """Set MCP23017zero GPIO[{pin}] to {value}."""
         with self:
             self._set_register_value("OLAT", pin, value)
 
     def set_input(self, pin, is_input):
-        """Set MCP23017 GPIO[{pin}] as input."""
+        """Set MCP23017zero GPIO[{pin}] as input."""
         with self:
             self._set_register_value("IODIR", pin, is_input)
 
     def set_pullup(self, pin, is_pullup):
-        """Set MCP23017 GPIO[{pin}] as pullup."""
+        """Set MCP23017zero GPIO[{pin}] as pullup."""
         with self:
             self._set_register_value("GPPU", pin, is_pullup)
 
